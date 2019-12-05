@@ -4,7 +4,7 @@ title: candidate-exercises-public
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "This is the answer to the tech assessments for imply. Here you can find the coding exercise and the Case Study."
+summary: "This is the answer to the tech assessments for imply. Here you can find the coding exercise explained and the Case Study."
 ---
 <!--
 
@@ -23,20 +23,45 @@ summary: "This is the answer to the tech assessments for imply. Here you can fin
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This file will become your README and also the index of your documentation.</p>
+<h2 id="Requirements">Requirements<a class="anchor-link" href="#Requirements">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>python 3</li>
+</ul>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Install">Install<a class="anchor-link" href="#Install">&#182;</a></h2>
+<h2 id="Installing">Installing<a class="anchor-link" href="#Installing">&#182;</a></h2>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><code>pip install candidate_exercises_public</code></p>
+<ol>
+<li><code>git clone git@github.com:theccalderon/imply.git</code></li>
+<li><code>cd imply</code></li>
+<li><code>pip install -r requirements.txt</code></li>
+</ol>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Execute">Execute<a class="anchor-link" href="#Execute">&#182;</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>python candidate_exercises_public.py path/to/json/file path/to/avro/file path/to/csv/file path/to/final/csv/file</code></p>
 
 </div>
 </div>
@@ -53,6 +78,55 @@ summary: "This is the answer to the tech assessments for imply. Here you can fin
 
 </div>
 </div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>I decided to use <code>pandas</code> since is my go to when dealig with tabular data in python. Dataframes allow us to easily remove duplicates, aggregate data and create new files</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pandavro</span> <span class="k">as</span> <span class="nn">pdx</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="k">import</span> <span class="n">Path</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">combine_files</span><span class="p">(</span><span class="n">json_filepath</span><span class="p">,</span> <span class="n">arvo_filepath</span><span class="p">,</span> <span class="n">csv_filepath</span><span class="p">,</span> <span class="n">output_filepath</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Combines the three files, eliminates duplicates and it sorts the resulting dataset by City Name. Creates </span>
+<span class="sd">    a csv file in output_filepath and returns a dataframe with its content</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#reading all the three files</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">json_filepath</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_filepath</span><span class="p">))</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pdx</span><span class="o">.</span><span class="n">read_avro</span><span class="p">(</span><span class="n">arvo_filepath</span><span class="p">))</span>
+    <span class="c1">#dropping duplicates</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+    <span class="c1">#sorting by Name</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Name&#39;</span><span class="p">)</span>
+    <span class="c1">#writing to csv</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span><span class="s1">&#39;CountryCode&#39;</span><span class="p">,</span><span class="s1">&#39;Population&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">output_filepath</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
@@ -85,13 +159,15 @@ summary: "This is the answer to the tech assessments for imply. Here you can fin
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>00_core.ipynb              Makefile
-99_index.ipynb             README.md
-CONTRIBUTING.md            <span class="ansi-cyan-intense-fg ansi-bold">candidate_exercises_public</span>
+<pre>00_core.ipynb              arvo.csv
+99_index.ipynb             <span class="ansi-cyan-intense-fg ansi-bold">candidate_exercises_public</span>
+CONTRIBUTING.md            csv.csv
 CityList.csv               <span class="ansi-cyan-intense-fg ansi-bold">docs</span>
 CityListA.json             finalDataset.csv
-CityListB.avro             settings.ini
-LICENSE                    setup.py
+CityListB.avro             json.csv
+LICENSE                    settings.ini
+Makefile                   setup.py
+README.md
 </pre>
 </div>
 </div>
@@ -144,7 +220,6 @@ LICENSE                    setup.py
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>Unnamed: 0</th>
       <th>Name</th>
       <th>CountryCode</th>
       <th>Population</th>
@@ -153,35 +228,30 @@ LICENSE                    setup.py
   <tbody>
     <tr>
       <th>0</th>
-      <td>287</td>
       <td>A CoruÃ±a (La CoruÃ±a)</td>
       <td>ESP</td>
       <td>243402</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>947</td>
       <td>Aalborg</td>
       <td>DNK</td>
       <td>161161</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>400</td>
       <td>Abadan</td>
       <td>IRN</td>
       <td>206073</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>792</td>
       <td>Abbotsford</td>
       <td>CAN</td>
       <td>105403</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>205</td>
       <td>Aberdeen</td>
       <td>GBR</td>
       <td>213070</td>
@@ -245,6 +315,27 @@ LICENSE                    setup.py
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To find the city with the largest population we can sort by Population descendingly and grab the first row</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">city_with_largets_population_from_df</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Population&#39;</span><span class="p">,</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:</span><span class="mi">1</span><span class="p">][[</span><span class="s1">&#39;Name&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 
@@ -297,6 +388,20 @@ LICENSE                    setup.py
 
 <div class="inner_cell">
     <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">total_population_per_country_from_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">country_code</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CountryCode&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">country_code</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;CountryCode&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Population</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">total_population_per_country_from_df</span><span class="p">(</span><span class="n">final_csv</span><span class="p">,</span><span class="s1">&#39;BRA&#39;</span><span class="p">))</span>
 </pre></div>
 
@@ -327,7 +432,7 @@ LICENSE                    setup.py
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In this program, the data is stored in files and those files are read and the data is then manually aggregated to find the answers to the questions. To improve its performance, we could have the data stored in a high performance database (like Druid) which offers fast aggregations at scale therefore, there would be no need to manually aggregate the data after being consumed.</p>
+<p>The data is currently being read sequentially (one file at the time). To improve performance, we could read the data in parallel since it's coming form different sources. By doing this we would maximize the use of our resources and speed things up.</p>
 
 </div>
 </div>
@@ -340,7 +445,7 @@ LICENSE                    setup.py
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To scale the solution when the data cannot be stored just in a single machine we can use technologies (like Hadoop or Druid) which allow clustering multiple computers to analyze massive datasets in parallel more quickly.</p>
+<p>To scale the solution when the data cannot be stored just in a single machine we can use big data technologies (like Hadoop) which allow clustering multiple computers to analyze massive datasets in parallel more quickly. Hadoop makes it easier to use all the storage and processing capacity in cluster servers, and to execute distributed processes against huge amounts of data.</p>
 
 </div>
 </div>
@@ -430,7 +535,7 @@ LICENSE                    setup.py
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Since the traffic is very high (a quick search of real data verified this) we are going to use a cluster deployment. One of the main advantage of using clustering is the ability to scale horizontally on demand. That allows us to start small and then increase our hardware if needed.</p>
+<p>Since the traffic is very high we are going to use a cluster deployment. One of the main advantage of using clustering is the ability to scale horizontally on demand. That allows us to start small and then increase our hardware if needed.</p>
 
 </div>
 </div>
@@ -570,7 +675,7 @@ LICENSE                    setup.py
 <p>data/middleManager/runtime.properties:druid.server.http.numThreads=60\
 data/historical/runtime.properties:druid.server.http.numThreads=60\
 query/broker/runtime.properties:druid.server.http.numThreads=60\
-query/router/runtime.properties:druid.server.http.numThreads=100\</p>
+query/router/runtime.properties:druid.server.http.numThreads=100</p>
 <p>data/historical/runtime.properties:druid.cache.sizeInBytes=256000000\
 data/middleManager/runtime.properties:druid.indexer.fork.property.druid.processing.buffer.sizeBytes=100000000\
 data/historical/runtime.properties:druid.processing.buffer.sizeBytes=500000000\
@@ -591,27 +696,32 @@ query/broker/runtime.properties:druid.processing.buffer.sizeBytes=500000000</p>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>number of unique sessions in a particular month<div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="p">(</span><span class="k">session</span><span class="p">))</span> <span class="k">AS</span> <span class="n">unique_sessions</span>
-  <span class="k">FROM</span> <span class="n">koala_sessions</span>
-  <span class="k">WHERE</span> <span class="ss">&quot;__time&quot;</span> <span class="k">BETWEEN</span> <span class="k">TIMESTAMP</span> <span class="s1">&#39;YYYY-MM-01 00:00:00&#39;</span> <span class="k">AND</span> <span class="k">TIMESTAMP</span> <span class="s1">&#39;YYYY-MM-31 23:59:59&#39;</span>
-</pre></div>
-  where koala_sessions is the datasource name and MM will be the month we want to get the information for.</li>
-</ul>
+<p>We can use <code>Pivot</code> or <code>SQL</code> to answer the questions above. Please see below how to answer the questions using <code>SQL</code>:</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li>number of unique sessions per country in a particular day<div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="p">(</span><span class="k">session</span><span class="p">))</span> <span class="k">AS</span> <span class="n">unique_sessions</span><span class="p">,</span> <span class="n">country</span>
-  <span class="k">FROM</span> <span class="n">koala_sessions</span>
-  <span class="k">WHERE</span> <span class="ss">&quot;__time&quot;</span> <span class="k">BETWEEN</span> <span class="k">TIMESTAMP</span> <span class="s1">&#39;YYYY-MM-DD 00:00:00&#39;</span> <span class="k">AND</span> <span class="k">TIMESTAMP</span> <span class="s1">&#39;YYYY-MM-DD 23:59:59&#39;</span>
-  <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">country</span>
+<h4 id="number-of-unique-sessions-in-a-particular-month">number of unique sessions in a particular month<a class="anchor-link" href="#number-of-unique-sessions-in-a-particular-month">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span><span class="p">(</span><span class="k">session</span><span class="p">))</span> <span class="k">AS</span> <span class="n">unique_sessions</span>
+    <span class="k">FROM</span> <span class="n">koala_sessions</span>
+    <span class="k">WHERE</span> <span class="ss">&quot;__time&quot;</span> <span class="k">BETWEEN</span> <span class="k">TIMESTAMP</span> <span class="s1">&#39;YYYY-MM-01 00:00:00&#39;</span> <span class="k">AND</span> <span class="k">TIMESTAMP</span> <span class="s1">&#39;YYYY-(MM+1)-01 00:00:00&#39;</span>
 </pre></div>
-  where koala_sessions is the datasource name and YYYY == year, MM == month, DD == day</li>
-</ul>
+
+<pre><code>where koala_sessions is the datasource name and MM will be the month we want to get the information for.</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="number-of-unique-sessions-per-country-in-a-particular-day">number of unique sessions per country in a particular day<a class="anchor-link" href="#number-of-unique-sessions-per-country-in-a-particular-day">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">SELECT</span> <span class="k">COUNT</span><span class="p">(</span><span class="k">DISTINCT</span> <span class="p">(</span><span class="k">session</span><span class="p">))</span> <span class="k">AS</span> <span class="n">unique_sessions</span><span class="p">,</span> <span class="n">country</span>
+    <span class="k">FROM</span> <span class="n">koala_sessions</span>
+    <span class="k">WHERE</span> <span class="ss">&quot;__time&quot;</span> <span class="k">BETWEEN</span> <span class="k">TIMESTAMP</span> <span class="s1">&#39;YYYY-MM-DD 00:00:00&#39;</span> <span class="k">AND</span> <span class="k">TIMESTAMP</span> <span class="s1">&#39;YYYY-MM-(DD+1) 00:00:00&#39;</span>
+    <span class="k">GROUP</span> <span class="k">BY</span> <span class="n">country</span>
+</pre></div>
+
+<pre><code>where koala_sessions is the datasource name and YYYY == year, MM == month, DD == day</code></pre>
 
 </div>
 </div>
