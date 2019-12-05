@@ -378,7 +378,7 @@ README.md
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>To find the total population of all cities in Brazil we need to group_by all the rows with CountryCode == BRA and sum their population</p>
+<p>To find the total population of all cities in Brazil we select the rows where CountryCode == BRA and then sum the population values.</p>
 
 </div>
 </div>
@@ -389,7 +389,7 @@ README.md
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">total_population_per_country_from_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">country_code</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CountryCode&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">country_code</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;CountryCode&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">Population</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;CountryCode&#39;</span><span class="p">]</span><span class="o">==</span><span class="n">country_code</span><span class="p">][</span><span class="s1">&#39;Population&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
 
     </div>
@@ -542,7 +542,7 @@ README.md
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>For a Production setup, here is my recommendation (we need a highly available and fault tolerant setup):</p>
+<p>For a Production setup, here is my recommendation (we need a highly available and fault tolerant setup) :</p>
 <ul>
 <li>3 Master servers</li>
 <li>2 query servers</li>
